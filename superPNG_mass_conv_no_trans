@@ -1,0 +1,64 @@
+//Piilus script for easier SuperPNG save - transperancy ver
+
+#target photoshop
+
+displayDialogs = DialogModes.NO
+
+if (BridgeTalk.appName == "photoshop") {
+    app.bringToFront;
+
+    var inputFolder = Folder.selectDialog("Select location path:"); //opens a window where wiles are located
+
+    if (inputFolder != null) {
+        var fileList = inputFolder.getFiles(/\.(png)$/i); //you can save the file type to suit your need works with all native ps types
+        var outputFolder = inputFolder;
+
+        for (var i = 0; i < fileList.length; i++) {
+            if (fileList[i] instanceof File) {
+                var document = open(fileList[i]);
+                var documentName = fileList[i].name.replace(/\.[^\.]+$/, ''); 
+
+                while (app.documents.length) {
+
+                    save(9, 248, 0, true, 100, true, false, false, new File(decodeURI(outputFolder)), true, true, false);
+                    function save(pngC, pngF, pngS, pngQ, pngq, pngX, pngI, pngM, In, copy, lowerCase, embedProfiles) {
+                    var c2t = function (s) {
+		                return app.charIDToTypeID(s);
+	                };
+
+	                var s2t = function (s) {
+		                return app.stringIDToTypeID(s);
+	                };
+
+	                var descriptor = new ActionDescriptor();
+	                var descriptor2 = new ActionDescriptor();
+
+	                    descriptor2.putInteger( c2t( "pngC" ), pngC );
+	                    descriptor2.putInteger( c2t( "pngF" ), pngF );
+                        descriptor2.putInteger( c2t( "pngS" ), pngS );
+                        descriptor2.putBoolean( c2t( "pngQ" ), pngQ );
+	                    descriptor2.putInteger( c2t( "pngq" ), pngq );
+	                    descriptor2.putEnumerated( c2t( "pngA" ), c2t( "alfT" ), c2t( "alfT" ));
+                        descriptor2.putBoolean( c2t( "pngX" ), pngX );
+	                    descriptor2.putBoolean( c2t( "pngI" ), pngI );
+	                    descriptor2.putBoolean( c2t( "pngM" ), pngM );
+	                    descriptor.putObject( s2t( "as" ), s2t( "fnord SuperPNG" ), descriptor2 );
+	                    descriptor.putPath( c2t( "In  " ), In );
+	                    descriptor.putInteger( s2t( "documentID" ), 346 );
+                        descriptor.putBoolean( s2t( "copy" ), copy );
+	                    descriptor.putBoolean( s2t( "lowerCase" ), lowerCase );
+	                    descriptor.putBoolean( s2t( "embedProfiles" ), embedProfiles );
+	                    descriptor.putEnumerated( s2t( "saveStage" ), s2t( "saveStageType" ), s2t( "saveSucceeded" ));
+	                    executeAction( s2t( "save" ), descriptor, DialogModes.NO );
+ 
+                        document.close(SaveOptions.DONOTSAVECHANGES);
+                        
+                    }        
+                }
+            }
+        }
+        if (i == fileList.length - 0) {
+            alert("Saved Babyyyy"); //nothing special just adds a useless text after script has run
+        }
+    }
+}
